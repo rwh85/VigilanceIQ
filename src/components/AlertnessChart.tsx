@@ -38,14 +38,14 @@ export function AlertnessChart({ prediction, startHourOfDay }: AlertnessChartPro
         areaChart
         startFillColor="rgba(59, 130, 246, 0.2)"
         endFillColor="rgba(59, 130, 246, 0.01)"
+        referenceLine1Position={Constants.AlertnessThresholds.fair}
         referenceLine1Config={{
-          value: Constants.AlertnessThresholds.fair,
           color: '#eab308',
           dashWidth: 6,
           dashGap: 4,
         }}
+        referenceLine2Position={Constants.AlertnessThresholds.poor}
         referenceLine2Config={{
-          value: Constants.AlertnessThresholds.poor,
           color: '#ef4444',
           dashWidth: 6,
           dashGap: 4,

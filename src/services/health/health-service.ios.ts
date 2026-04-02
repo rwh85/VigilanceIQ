@@ -14,7 +14,8 @@ const permissions: HealthKitPermissions = {
 
 class HealthKitServiceImpl implements HealthService {
   isAvailable(): boolean {
-    return AppleHealthKit.isAvailable();
+    // react-native-health isAvailable is async; assume available on iOS
+    return true;
   }
 
   requestPermissions(): Promise<boolean> {

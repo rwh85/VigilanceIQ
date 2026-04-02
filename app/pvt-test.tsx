@@ -67,7 +67,7 @@ export default function PVTTestScreen() {
       <Text style={styles.timer}>{remainingSeconds}s</Text>
       {showStimulus && <View style={styles.dot} />}
       {engine.comboLabel !== '' && <Text style={styles.combo}>{engine.comboLabel}</Text>}
-      {engine.lastReactionTime != null && !showStimulus && (
+      {engine.reactionTimes.length > 0 && !showStimulus && (
         <Text style={styles.lastRT}>{Math.round(engine.reactionTimes[engine.reactionTimes.length - 1])} ms</Text>
       )}
     </Pressable>
