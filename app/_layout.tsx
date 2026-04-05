@@ -4,6 +4,7 @@ import { useColorScheme } from 'react-native';
 import { useAppStore } from '../src/stores/app-store';
 import { useDataStore } from '../src/stores/data-store';
 import { initDatabase } from '../src/services/database';
+import healthService from '../src/services/health/health-service';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -16,6 +17,7 @@ export default function RootLayout() {
       await initDatabase();
       await loadPersistedState();
       await loadAllData();
+      await healthService.requestPermissions();
       setReady(true);
     }
     init();

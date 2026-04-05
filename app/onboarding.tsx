@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppStore } from '../src/stores/app-store';
 import { requestNotificationPermissions, schedulePVTReminders } from '../src/services/notification-service';
+import healthService from '../src/services/health/health-service';
 import { spacing } from '../src/theme';
 
 type Step = 'welcome' | 'health' | 'notifications' | 'baseline';
@@ -38,6 +39,7 @@ export default function OnboardingScreen() {
         body="VigilanceIQ can read your sleep data to make accurate alertness predictions. On iOS this uses HealthKit, on Android it uses Health Connect."
         buttonText="Grant Access"
         onPress={async () => {
+          await healthService.requestPermissions();
           setStep('notifications');
         }}
         secondaryText="Skip"
