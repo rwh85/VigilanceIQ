@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet } from 'react-native';
 import { useAlertnessStore } from '../../src/stores/alertness-store';
 import { useDataStore } from '../../src/stores/data-store';
+import { useAlertnessPrediction } from '../../src/hooks/useAlertnessPrediction';
 import { AlertnessCard } from '../../src/components/AlertnessCard';
 import { AlertnessChart } from '../../src/components/AlertnessChart';
 import { PersonalizationProgress } from '../../src/components/PersonalizationProgress';
@@ -8,6 +9,7 @@ import { useThemeColors } from '../../src/theme';
 
 export default function AlertnessTab() {
   const theme = useThemeColors();
+  useAlertnessPrediction();
   const { currentImpairment, currentBAC, prediction, hoursAwake } = useAlertnessStore();
   const { pvtResults } = useDataStore();
 
