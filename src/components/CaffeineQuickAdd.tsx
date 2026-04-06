@@ -1,5 +1,6 @@
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { CaffeinePreset } from '../models/types';
 import { useThemeColors, spacing, radius } from '../theme';
 
@@ -16,7 +17,10 @@ export function CaffeineQuickAdd({ presets, onAdd }: CaffeineQuickAddProps) {
       {presets.map((preset) => (
         <Pressable
           key={preset.id}
-          onPress={() => onAdd(preset)}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            onAdd(preset);
+          }}
           style={[styles.button, { backgroundColor: theme.surface, borderColor: theme.border }]}
         >
           <Ionicons name={preset.iconName as any} size={24} color={theme.accent} />
