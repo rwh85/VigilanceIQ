@@ -64,6 +64,7 @@ export default function RootLayout() {
         <Stack.Screen name="caffeine-presets" />
         <Stack.Screen name="add-sleep" options={{ presentation: 'modal' }} />
         <Stack.Screen name="achievements" />
+        <Stack.Screen name="nap" />
       </Stack>
       <DrowsinessAlertBanner />
     </View>

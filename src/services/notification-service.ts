@@ -102,3 +102,25 @@ export async function sendDrowsinessAlert(): Promise<void> {
     trigger: null,
   });
 }
+
+export async function scheduleNapWakeNotification(
+  durationMinutes: number,
+): Promise<string> {
+  const wakeTime = new Date(Date.now() + durationMinutes * 60000);
+  const id = await Notifications.scheduleNotificationAsync({
+    content: {
+      title: 'Nap Complete',
+      body: 'Your nap is complete. Time to drive alert!',
+      sound: true,
+    },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.DATE,
+      date: wakeTime,
+    },
+  });
+  return id;
+}
+
+export async function cancelNapWakeNotification(notificationId: string): Promise<void> {
+  await Notifications.cancelScheduledNotificationAsync(notificationId);
+}
