@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { useThemeColors, spacing } from '../theme';
+import { useThemeColors, spacing, radius } from '../theme';
 import { Constants } from '../models/constants';
 
 interface PersonalizationProgressProps {
@@ -30,7 +30,7 @@ export function PersonalizationProgress({ testCount }: PersonalizationProgressPr
 }
 
 const styles = StyleSheet.create({
-  container: { borderRadius: 12, padding: spacing.md, borderWidth: 1, marginHorizontal: spacing.md, marginVertical: spacing.sm },
+  container: { borderRadius: radius.md, padding: spacing.md, borderWidth: 1, marginHorizontal: spacing.md, marginVertical: spacing.sm },
   title: { fontSize: 14, fontWeight: '600', marginBottom: spacing.sm },
   barBg: { height: 8, borderRadius: 4, overflow: 'hidden' },
   barFill: { height: '100%', borderRadius: 4 },

@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Animated, { FadeIn, FadeOut, BounceIn } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { Achievement } from '../models/types';
-import { spacing } from '../theme';
+import { spacing, radius } from '../theme';
 
 const CATEGORY_COLORS: Record<string, string> = {
   consistency: '#3b82f6',
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 20,
+    borderRadius: radius.xl,
     padding: spacing.xl,
     alignItems: 'center',
     width: 280,

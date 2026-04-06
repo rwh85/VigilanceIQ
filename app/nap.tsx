@@ -21,7 +21,7 @@ import {
   scheduleNapWakeNotification,
   cancelNapWakeNotification,
 } from '../src/services/notification-service';
-import { useThemeColors, spacing } from '../src/theme';
+import { useThemeColors, spacing, radius } from '../src/theme';
 import { Constants } from '../src/models/constants';
 
 function formatTime(date: Date): string {
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 18, fontWeight: '700' },
 
   card: {
-    borderRadius: 16,
+    borderRadius: radius.lg,
     padding: spacing.md,
     borderWidth: 1,
     marginHorizontal: spacing.md,
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   recWindow: { fontSize: 17, fontWeight: '700', marginBottom: spacing.sm },
   durationBadge: {
     alignSelf: 'flex-start',
-    borderRadius: 8,
+    borderRadius: radius.sm,
     paddingHorizontal: spacing.sm,
     paddingVertical: 4,
     marginBottom: spacing.sm,
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
   napTimerBtn: {
     flexDirection: 'row',
     backgroundColor: '#818cf8',
-    borderRadius: 12,
+    borderRadius: radius.md,
     paddingVertical: 14,
     justifyContent: 'center',
     alignItems: 'center',

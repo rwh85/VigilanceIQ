@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { useThemeColors, spacing } from '../theme';
+import { useThemeColors, spacing, radius } from '../theme';
 import { getPerformanceLevel, reactionTimeToAlertness, PERFORMANCE_COLORS, PERFORMANCE_LABELS } from '../models/types';
 
 interface AlertnessCardProps {
@@ -44,7 +44,7 @@ export function AlertnessCard({ impairmentMs, bacEquivalence, hoursAwake }: Aler
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 16,
+    borderRadius: radius.lg,
     padding: spacing.lg,
     borderWidth: 1,
     marginHorizontal: spacing.md,

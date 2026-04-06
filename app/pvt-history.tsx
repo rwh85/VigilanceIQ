@@ -1,7 +1,7 @@
 import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useDataStore } from '../src/stores/data-store';
-import { useThemeColors, spacing } from '../src/theme';
+import { useThemeColors, spacing, radius } from '../src/theme';
 import { getPerformanceLevel, PERFORMANCE_COLORS } from '../src/models/types';
 
 export default function PVTHistoryScreen() {
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   backText: { fontSize: 18 },
   title: { fontSize: 18, fontWeight: '700' },
   list: { padding: spacing.md, gap: spacing.sm },
-  card: { borderRadius: 12, padding: spacing.md, borderWidth: 1 },
+  card: { borderRadius: radius.md, padding: spacing.md, borderWidth: 1 },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm },
   meanRT: { fontSize: 22, fontWeight: '700' },
   date: { fontSize: 12 },

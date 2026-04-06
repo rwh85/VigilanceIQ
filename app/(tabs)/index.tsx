@@ -8,7 +8,7 @@ import { useAlertnessPrediction } from '../../src/hooks/useAlertnessPrediction';
 import { AlertnessCard } from '../../src/components/AlertnessCard';
 import { AlertnessChart, AlertnessChartSkeleton } from '../../src/components/AlertnessChart';
 import { PersonalizationProgress } from '../../src/components/PersonalizationProgress';
-import { useThemeColors, spacing } from '../../src/theme';
+import { useThemeColors, spacing, radius } from '../../src/theme';
 
 const SKELETON_MIN_MS = 300;
 
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
-    borderRadius: 16,
+    borderRadius: radius.lg,
     padding: spacing.md,
     borderWidth: 1,
     marginHorizontal: spacing.md,

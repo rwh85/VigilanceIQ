@@ -2,7 +2,7 @@ import { View, Text, ScrollView, Pressable, StyleSheet, Alert, Switch } from 're
 import { useRouter } from 'expo-router';
 import { useAppStore } from '../../src/stores/app-store';
 import { useDataStore } from '../../src/stores/data-store';
-import { useThemeColors, spacing } from '../../src/theme';
+import { useThemeColors, spacing, radius } from '../../src/theme';
 import type { DrowsinessThreshold } from '../../src/stores/app-store';
 
 function Stepper({
@@ -202,10 +202,10 @@ const styles = StyleSheet.create({
   stepBtn: { width: 28, height: 28, borderRadius: 6, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
   stepBtnText: { fontSize: 18, lineHeight: 22, fontWeight: '500' },
   stepValue: { fontSize: 15, fontWeight: '500', minWidth: 52, textAlign: 'center' },
-  danger: { marginTop: spacing.xl, marginHorizontal: spacing.md, padding: spacing.md, borderRadius: 12, backgroundColor: '#fee2e2', alignItems: 'center' },
+  danger: { marginTop: spacing.xl, marginHorizontal: spacing.md, padding: spacing.md, borderRadius: radius.md, backgroundColor: '#fee2e2', alignItems: 'center' },
   dangerText: { color: '#ef4444', fontWeight: '600', fontSize: 16 },
   thresholdRow: { flexDirection: 'row', gap: spacing.sm, width: '100%', paddingBottom: spacing.sm },
-  thresholdBtn: { flex: 1, borderWidth: 1.5, borderRadius: 8, padding: spacing.sm, alignItems: 'center' },
+  thresholdBtn: { flex: 1, borderWidth: 1.5, borderRadius: radius.sm, padding: spacing.sm, alignItems: 'center' },
   thresholdBtnText: { fontSize: 14, fontWeight: '600' },
   thresholdDesc: { fontSize: 11, textAlign: 'center', marginTop: 2 },
 });

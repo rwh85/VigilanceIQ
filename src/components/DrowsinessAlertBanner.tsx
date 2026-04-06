@@ -1,7 +1,7 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAlertnessStore } from '../stores/alertness-store';
-import { spacing } from '../theme';
+import { spacing, radius } from '../theme';
 
 export function DrowsinessAlertBanner() {
   const alertActive = useAlertnessStore((s) => s.alertActive);
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   napBtn: {
     flex: 1,
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: radius.sm,
     paddingVertical: 10,
     alignItems: 'center',
   },
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 1.5,
     borderColor: '#fecaca',
-    borderRadius: 8,
+    borderRadius: radius.sm,
     paddingVertical: 10,
     alignItems: 'center',
   },

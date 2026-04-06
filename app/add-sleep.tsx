@@ -7,7 +7,7 @@ import { useAlertnessStore } from '../src/stores/alertness-store';
 import { useAppStore } from '../src/stores/app-store';
 import { SleepQuality, SleepSession } from '../src/models/types';
 import { SleepWakeSchedule } from '../src/models/sleep-wake-schedule';
-import { useThemeColors, spacing } from '../src/theme';
+import { useThemeColors, spacing, radius } from '../src/theme';
 import healthService from '../src/services/health/health-service';
 
 const QUALITY_LABELS: Record<number, { label: string; quality: SleepQuality }> = {
@@ -298,13 +298,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: radius.md,
     padding: spacing.md,
     marginBottom: spacing.md,
   },
   fieldLabel: { fontSize: 14 },
   fieldValue: { fontSize: 16, fontWeight: '600' },
-  doneButton: { alignSelf: 'flex-end', paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: 8, marginBottom: spacing.sm },
+  doneButton: { alignSelf: 'flex-end', paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.sm, marginBottom: spacing.sm },
   doneText: { fontSize: 16, fontWeight: '600' },
   duration: { fontSize: 48, fontWeight: '700', marginVertical: spacing.lg },
   qualityTitle: { fontSize: 16, fontWeight: '600', marginBottom: spacing.sm },

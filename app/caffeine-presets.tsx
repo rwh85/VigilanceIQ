@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Text, FlatList, Pressable, StyleSheet, TextInput, ScrollView, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useDataStore } from '../src/stores/data-store';
-import { useThemeColors, spacing } from '../src/theme';
+import { useThemeColors, spacing, radius } from '../src/theme';
 import { CaffeineSource, CAFFEINE_SOURCE_LABELS } from '../src/models/types';
 
 const ALL_SOURCES: CaffeineSource[] = ['coffee', 'espresso', 'tea', 'energyDrink', 'soda', 'preworkout', 'pill', 'custom'];
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   addText: { fontSize: 16, fontWeight: '600', textAlign: 'right' },
   title: { fontSize: 18, fontWeight: '700' },
   list: { padding: spacing.md, gap: spacing.sm },
-  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderRadius: 12, padding: spacing.md, borderWidth: 1 },
+  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderRadius: radius.md, padding: spacing.md, borderWidth: 1 },
   info: { flex: 1 },
   name: { fontSize: 16, fontWeight: '600' },
   dose: { fontSize: 14, marginTop: 2 },
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   input: { borderWidth: 1, borderRadius: 10, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, fontSize: 16 },
   label: { fontSize: 13, fontWeight: '500' },
   sourceScroll: { flexGrow: 0 },
-  sourceChip: { borderWidth: 1, borderRadius: 20, paddingHorizontal: spacing.md, paddingVertical: spacing.xs, marginRight: spacing.sm },
+  sourceChip: { borderWidth: 1, borderRadius: radius.xl, paddingHorizontal: spacing.md, paddingVertical: spacing.xs, marginRight: spacing.sm },
   sourceChipText: { fontSize: 13, fontWeight: '500' },
   sheetActions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.sm },
   actionBtn: { flex: 1, borderWidth: 1, borderRadius: 10, paddingVertical: spacing.sm, alignItems: 'center' },

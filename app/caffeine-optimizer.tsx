@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useDataStore } from '../src/stores/data-store';
-import { useThemeColors, spacing } from '../src/theme';
+import { useThemeColors, spacing, radius } from '../src/theme';
 
 export default function CaffeineOptimizerScreen() {
   const router = useRouter();
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   backText: { fontSize: 18 },
   title: { fontSize: 18, fontWeight: '700' },
   content: { padding: spacing.md, gap: spacing.md },
-  card: { borderRadius: 12, padding: spacing.md, borderWidth: 1 },
+  card: { borderRadius: radius.md, padding: spacing.md, borderWidth: 1 },
   cardTitle: { fontSize: 12, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: spacing.sm },
   totalMg: { fontSize: 40, fontWeight: '700', marginBottom: spacing.xs },
   cardSub: { fontSize: 14 },

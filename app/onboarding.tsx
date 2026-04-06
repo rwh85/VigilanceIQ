@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAppStore } from '../src/stores/app-store';
 import { requestNotificationPermissions, schedulePVTReminders } from '../src/services/notification-service';
 import healthService from '../src/services/health/health-service';
+import { radius } from '../src/theme';
 
 type Step = 'welcome' | 'how-it-works' | 'permissions' | 'profile' | 'pvt-preview' | 'ready';
 
@@ -386,7 +387,7 @@ const styles = StyleSheet.create({
   fieldGroup: { width: '100%', marginBottom: 28 },
   fieldLabel: { color: '#9ca3af', fontSize: 15, fontWeight: '600', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 },
   textInput: {
-    backgroundColor: '#1c1c1e', borderRadius: 12, borderWidth: 1, borderColor: '#374151',
+    backgroundColor: '#1c1c1e', borderRadius: radius.md, borderWidth: 1, borderColor: '#374151',
     color: '#fff', fontSize: 18, paddingHorizontal: 16, paddingVertical: 14,
   },
   stepper: { flexDirection: 'row', alignItems: 'center', gap: 16 },
@@ -401,7 +402,7 @@ const styles = StyleSheet.create({
 const pvtPreview = StyleSheet.create({
   demoWrapper: {
     marginVertical: 28,
-    borderRadius: 20,
+    borderRadius: radius.xl,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#1f2937',

@@ -4,6 +4,7 @@ import { usePVTTest } from '../src/hooks/usePVTTest';
 import { useDataStore } from '../src/stores/data-store';
 import { PERFORMANCE_COLORS, PERFORMANCE_LABELS } from '../src/models/types';
 import * as Haptics from 'expo-haptics';
+import { radius } from '../src/theme';
 
 function getAlertnessScore(meanRT: number): number {
   if (meanRT < 300) return 10;
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
   whyTitle: { color: '#fb923c', fontSize: 14, fontWeight: '700', marginBottom: 6, letterSpacing: 0.5 },
   whyText: { color: '#9ca3af', fontSize: 16, lineHeight: 24 },
   startButton: {
-    width: '100%', backgroundColor: '#dc2626', borderRadius: 16,
+    width: '100%', backgroundColor: '#dc2626', borderRadius: radius.lg,
     paddingVertical: 20, alignItems: 'center', marginBottom: 14,
   },
   startButtonText: { color: '#fff', fontSize: 22, fontWeight: '800', letterSpacing: 0.5 },
@@ -289,18 +290,18 @@ const styles = StyleSheet.create({
   baselineText: { color: '#d1d5db', fontSize: 15, textAlign: 'center' },
   statsGrid: { flexDirection: 'row', gap: 12, marginBottom: 32, width: '100%' },
   statBox: {
-    flex: 1, backgroundColor: '#1c1c1e', borderRadius: 12,
+    flex: 1, backgroundColor: '#1c1c1e', borderRadius: radius.md,
     paddingVertical: 16, alignItems: 'center',
   },
   statValue: { color: '#fff', fontSize: 26, fontWeight: '700' },
   statName: { color: '#6b7280', fontSize: 12, textAlign: 'center', marginTop: 4, lineHeight: 17 },
   saveButton: {
-    width: '100%', backgroundColor: '#2563eb', borderRadius: 16,
+    width: '100%', backgroundColor: '#2563eb', borderRadius: radius.lg,
     paddingVertical: 18, alignItems: 'center', marginBottom: 12,
   },
   saveButtonText: { color: '#fff', fontSize: 18, fontWeight: '700' },
   shareButton: {
-    width: '100%', backgroundColor: '#1c1c1e', borderRadius: 16,
+    width: '100%', backgroundColor: '#1c1c1e', borderRadius: radius.lg,
     paddingVertical: 18, alignItems: 'center', marginBottom: 12,
     borderWidth: 1, borderColor: '#374151',
   },

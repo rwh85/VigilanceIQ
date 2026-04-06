@@ -1,7 +1,7 @@
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { CaffeinePreset } from '../models/types';
-import { useThemeColors, spacing } from '../theme';
+import { useThemeColors, spacing, radius } from '../theme';
 
 interface CaffeineQuickAddProps {
   presets: CaffeinePreset[];
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     padding: spacing.md,
-    borderRadius: 12,
+    borderRadius: radius.md,
     borderWidth: 1,
     width: 90,
   },
