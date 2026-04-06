@@ -28,7 +28,7 @@ export default function CaffeineTab() {
       timeHour: now.getHours() + now.getMinutes() / 60,
       timestamp: now,
       doseMg: preset.doseMg,
-      source: 'coffee',
+      source: preset.source,
     });
   };
 

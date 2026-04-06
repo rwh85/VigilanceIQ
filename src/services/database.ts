@@ -37,6 +37,7 @@ export const caffeinePresets = sqliteTable('caffeine_presets', {
   doseMg: real('dose_mg').notNull(),
   iconName: text('icon_name').notNull().default('cafe-outline'),
   sortOrder: integer('sort_order').notNull().default(0),
+  source: text('source').notNull().default('custom'),
 });
 
 // --- Database Instance ---
@@ -78,7 +79,14 @@ export async function initDatabase(): Promise<void> {
       name TEXT NOT NULL,
       dose_mg REAL NOT NULL,
       icon_name TEXT NOT NULL DEFAULT 'cafe-outline',
-      sort_order INTEGER NOT NULL DEFAULT 0
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      source TEXT NOT NULL DEFAULT 'custom'
     );
   `);
+  // Migration: add source column for existing databases that predate this field
+  try {
+    await expo.execAsync(`ALTER TABLE caffeine_presets ADD COLUMN source TEXT NOT NULL DEFAULT 'custom';`);
+  } catch {
+    // Column already exists — safe to ignore
+  }
 }

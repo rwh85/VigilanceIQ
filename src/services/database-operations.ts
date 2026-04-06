@@ -114,6 +114,7 @@ export async function saveCaffeinePreset(preset: CaffeinePreset): Promise<void> 
     doseMg: preset.doseMg,
     iconName: preset.iconName,
     sortOrder: preset.sortOrder,
+    source: preset.source,
   });
 }
 
@@ -125,6 +126,7 @@ export async function getCaffeinePresets(): Promise<CaffeinePreset[]> {
     doseMg: row.doseMg,
     iconName: row.iconName,
     sortOrder: row.sortOrder,
+    source: (row.source ?? 'custom') as CaffeineSource,
   }));
 }
 

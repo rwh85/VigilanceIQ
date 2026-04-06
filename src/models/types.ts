@@ -36,15 +36,27 @@ export interface CaffeinePreset {
   doseMg: number;
   iconName: string;
   sortOrder: number;
+  source: CaffeineSource;
 }
 
+export const CAFFEINE_SOURCE_LABELS: Record<CaffeineSource, string> = {
+  coffee: 'Coffee',
+  espresso: 'Espresso',
+  tea: 'Tea',
+  energyDrink: 'Energy Drink',
+  soda: 'Soda',
+  preworkout: 'Pre-Workout',
+  pill: 'Caffeine Pill',
+  custom: 'Custom',
+};
+
 export const DEFAULT_CAFFEINE_PRESETS: CaffeinePreset[] = [
-  { id: 'default-coffee', name: 'Coffee', doseMg: 95, iconName: 'cafe-outline', sortOrder: 0 },
-  { id: 'default-espresso', name: 'Espresso', doseMg: 64, iconName: 'cafe', sortOrder: 1 },
-  { id: 'default-tea', name: 'Tea', doseMg: 47, iconName: 'leaf-outline', sortOrder: 2 },
-  { id: 'default-energy', name: 'Energy Drink', doseMg: 80, iconName: 'flash-outline', sortOrder: 3 },
-  { id: 'default-soda', name: 'Soda', doseMg: 34, iconName: 'water-outline', sortOrder: 4 },
-  { id: 'default-preworkout', name: 'Pre-Workout', doseMg: 200, iconName: 'barbell-outline', sortOrder: 5 },
+  { id: 'default-coffee', name: 'Coffee', doseMg: 95, iconName: 'cafe-outline', sortOrder: 0, source: 'coffee' },
+  { id: 'default-espresso', name: 'Espresso', doseMg: 64, iconName: 'cafe', sortOrder: 1, source: 'espresso' },
+  { id: 'default-tea', name: 'Tea', doseMg: 47, iconName: 'leaf-outline', sortOrder: 2, source: 'tea' },
+  { id: 'default-energy', name: 'Energy Drink', doseMg: 80, iconName: 'flash-outline', sortOrder: 3, source: 'energyDrink' },
+  { id: 'default-soda', name: 'Soda', doseMg: 34, iconName: 'water-outline', sortOrder: 4, source: 'soda' },
+  { id: 'default-preworkout', name: 'Pre-Workout', doseMg: 200, iconName: 'barbell-outline', sortOrder: 5, source: 'preworkout' },
 ];
 
 // --- Sleep ---
