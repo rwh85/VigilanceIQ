@@ -1,6 +1,7 @@
 import { View, Text, Pressable, FlatList, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useDataStore } from '../../src/stores/data-store';
+import { SleepQualityBadge } from '../../src/components/SleepQualityBadge';
 import { useThemeColors, spacing } from '../../src/theme';
 
 export default function SleepTab() {
@@ -27,7 +28,7 @@ export default function SleepTab() {
                   {item.startDate.toLocaleDateString()} — {item.source}
                 </Text>
               </View>
-              {item.quality && <Text style={[styles.quality, { color: theme.textSecondary }]}>{item.quality}</Text>}
+              {item.quality && <SleepQualityBadge quality={item.quality} />}
             </View>
           );
         }}
@@ -44,6 +45,5 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: spacing.md, paddingHorizontal: spacing.md, borderBottomWidth: 1 },
   duration: { fontSize: 20, fontWeight: '700' },
   dates: { fontSize: 12, marginTop: 2 },
-  quality: { fontSize: 14 },
   empty: { textAlign: 'center', marginTop: spacing.xl },
 });
