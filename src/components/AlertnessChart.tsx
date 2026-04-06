@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { AlertnessPrediction } from '../models/types';
 import { Constants } from '../models/constants';
-import { useThemeColors, spacing } from '../theme';
+import { useThemeColors, spacing, radius, alertnessColors, typography } from '../theme';
 
 interface AlertnessChartProps {
   prediction: AlertnessPrediction;
@@ -11,21 +11,23 @@ interface AlertnessChartProps {
 
 export function AlertnessChart({ prediction, startHourOfDay }: AlertnessChartProps) {
   const theme = useThemeColors();
-  const width = Dimensions.get('window').width - spacing.md * 2;
+  const width = Dimensions.get('window').width - spacing.lg * 2;
 
   const data = prediction.times.map((t, i) => ({
     value: prediction.impairments[i],
     label: i % 4 === 0 ? formatHour((startHourOfDay + t) % 24) : '',
   }));
 
+  const chartFill = theme.caffeineAccent + '33'; // 20% opacity
+
   return (
     <View style={[styles.container, { backgroundColor: theme.surface, borderColor: theme.border }]}>
       <Text style={[styles.title, { color: theme.text }]}>Alertness Forecast</Text>
       <LineChart
         data={data}
-        width={width - spacing.lg * 2}
+        width={width - spacing.xxl * 2}
         height={200}
-        color="#3b82f6"
+        color={theme.caffeineAccent}
         thickness={2}
         hideDataPoints
         yAxisTextStyle={{ color: theme.textSecondary, fontSize: 10 }}
@@ -36,17 +38,17 @@ export function AlertnessChart({ prediction, startHourOfDay }: AlertnessChartPro
         backgroundColor={theme.surface}
         curved
         areaChart
-        startFillColor="rgba(59, 130, 246, 0.2)"
-        endFillColor="rgba(59, 130, 246, 0.01)"
+        startFillColor={chartFill}
+        endFillColor={theme.caffeineAccent + '03'}
         referenceLine1Position={Constants.AlertnessThresholds.fair}
         referenceLine1Config={{
-          color: '#eab308',
+          color: alertnessColors.fair,
           dashWidth: 6,
           dashGap: 4,
         }}
         referenceLine2Position={Constants.AlertnessThresholds.poor}
         referenceLine2Config={{
-          color: '#ef4444',
+          color: alertnessColors.veryPoor,
           dashWidth: 6,
           dashGap: 4,
         }}
@@ -63,6 +65,12 @@ function formatHour(h: number): string {
 }
 
 const styles = StyleSheet.create({
-  container: { borderRadius: 16, padding: spacing.md, borderWidth: 1, marginHorizontal: spacing.md, marginVertical: spacing.sm },
-  title: { fontSize: 14, fontWeight: '600', marginBottom: spacing.sm },
+  container: {
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    borderWidth: 1,
+    marginHorizontal: spacing.lg,
+    marginVertical: spacing.sm,
+  },
+  title: { ...typography.headingSmall, marginBottom: spacing.sm },
 });
