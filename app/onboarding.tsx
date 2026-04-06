@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   View, Text, Pressable, StyleSheet, TextInput, ScrollView,
-  KeyboardAvoidingView, Platform,
+  KeyboardAvoidingView, Platform, Animated,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,9 +9,9 @@ import { useAppStore } from '../src/stores/app-store';
 import { requestNotificationPermissions, schedulePVTReminders } from '../src/services/notification-service';
 import healthService from '../src/services/health/health-service';
 
-type Step = 'welcome' | 'how-it-works' | 'permissions' | 'profile' | 'ready';
+type Step = 'welcome' | 'how-it-works' | 'permissions' | 'profile' | 'pvt-preview' | 'ready';
 
-const STEPS: Step[] = ['welcome', 'how-it-works', 'permissions', 'profile', 'ready'];
+const STEPS: Step[] = ['welcome', 'how-it-works', 'permissions', 'profile', 'pvt-preview', 'ready'];
 
 export default function OnboardingScreen() {
   const router = useRouter();
@@ -56,8 +56,11 @@ export default function OnboardingScreen() {
           onChangeName={setName}
           onChangeShift={setShiftStartHour}
           onChangeDriving={setDailyDrivingHours}
-          onNext={() => next('ready')}
+          onNext={() => next('pvt-preview')}
         />
+      )}
+      {step === 'pvt-preview' && (
+        <PVTPreviewStep onNext={() => next('ready')} />
       )}
       {step === 'ready' && (
         <ReadyStep name={name.trim()} onFinish={finish} />
@@ -247,6 +250,75 @@ function ProfileStep({
   );
 }
 
+function PVTPreviewStep({ onNext }: { onNext: () => void }) {
+  const stimulusOpacity = useRef(new Animated.Value(0)).current;
+  const tapScale = useRef(new Animated.Value(0.5)).current;
+  const tapOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        // Dark circle visible — wait for stimulus
+        Animated.delay(1400),
+        // Stimulus appears
+        Animated.timing(stimulusOpacity, { toValue: 1, duration: 200, useNativeDriver: true }),
+        // Pause before tap
+        Animated.delay(500),
+        // Tap point appears
+        Animated.parallel([
+          Animated.timing(tapOpacity, { toValue: 1, duration: 120, useNativeDriver: true }),
+          Animated.timing(tapScale, { toValue: 1, duration: 120, useNativeDriver: true }),
+        ]),
+        // Tap ripples outward and fades
+        Animated.parallel([
+          Animated.timing(tapOpacity, { toValue: 0, duration: 380, useNativeDriver: true }),
+          Animated.timing(tapScale, { toValue: 2.2, duration: 380, useNativeDriver: true }),
+        ]),
+        // Stimulus disappears
+        Animated.timing(stimulusOpacity, { toValue: 0, duration: 180, useNativeDriver: true }),
+        // Reset tap scale silently for next loop
+        Animated.timing(tapScale, { toValue: 0.5, duration: 0, useNativeDriver: true }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [stimulusOpacity, tapOpacity, tapScale]);
+
+  return (
+    <View style={styles.page}>
+      <Text style={styles.title}>Your Reaction Test</Text>
+      <Text style={styles.body}>
+        A red circle appears on a dark screen. Tap it the instant you see it.
+      </Text>
+
+      <View style={pvtPreview.demoWrapper}>
+        {/* Dark background */}
+        <View style={pvtPreview.demoScreen}>
+          {/* Waiting circle (always visible as base) */}
+          <View style={pvtPreview.waitCircle} />
+          {/* Red stimulus overlaid */}
+          <Animated.View style={[pvtPreview.stimulusCircle, { opacity: stimulusOpacity }]} />
+          {/* Tap ripple */}
+          <Animated.View
+            style={[
+              pvtPreview.tapRipple,
+              { opacity: tapOpacity, transform: [{ scale: tapScale }] },
+            ]}
+          />
+        </View>
+      </View>
+
+      <Text style={pvtPreview.hint}>
+        You'll take 3 tests like this to build your personal baseline
+      </Text>
+
+      <Pressable style={styles.button} onPress={onNext}>
+        <Text style={styles.buttonText}>Got It</Text>
+      </Pressable>
+    </View>
+  );
+}
+
 function ReadyStep({ name, onFinish }: { name: string; onFinish: () => void }) {
   const greeting = name ? `You're all set, ${name}!` : "You're all set!";
   return (
@@ -324,4 +396,58 @@ const styles = StyleSheet.create({
   },
   stepBtnText: { color: '#2563eb', fontSize: 22, lineHeight: 26, fontWeight: '500' },
   stepValue: { color: '#fff', fontSize: 18, fontWeight: '600', minWidth: 96 },
+});
+
+const pvtPreview = StyleSheet.create({
+  demoWrapper: {
+    marginVertical: 28,
+    borderRadius: 20,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#1f2937',
+  },
+  demoScreen: {
+    width: 200,
+    height: 200,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  waitCircle: {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#1a1a1a',
+    borderWidth: 2,
+    borderColor: '#2a2a2a',
+  },
+  stimulusCircle: {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#ef4444',
+    shadowColor: '#ef4444',
+    shadowOpacity: 0.7,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  tapRipple: {
+    position: 'absolute',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 3,
+    borderColor: 'rgba(255,255,255,0.8)',
+    backgroundColor: 'transparent',
+  },
+  hint: {
+    color: '#6b7280',
+    fontSize: 15,
+    textAlign: 'center',
+    marginBottom: 32,
+    paddingHorizontal: 8,
+    lineHeight: 22,
+  },
 });
