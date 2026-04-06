@@ -4,11 +4,14 @@ import { useAlertnessStore } from '../stores/alertness-store';
 import { useAppStore } from '../stores/app-store';
 import { useDataStore } from '../stores/data-store';
 import { SleepWakeSchedule } from '../models/sleep-wake-schedule';
+import { DROWSINESS_THRESHOLD_MS } from '../stores/app-store';
 
 export function useAlertnessPrediction() {
   const updatePrediction = useAlertnessStore((s) => s.updatePrediction);
   const { sleepSessions, caffeineIntakes, userParameters } = useDataStore();
   const forecastDurationHours = useAppStore((s) => s.forecastDurationHours);
+  const drowsinessAlertsEnabled = useAppStore((s) => s.drowsinessAlertsEnabled);
+  const drowsinessThreshold = useAppStore((s) => s.drowsinessThreshold);
 
   const runPrediction = useCallback(() => {
     const now = new Date();
@@ -19,8 +22,11 @@ export function useAlertnessPrediction() {
     const currentHours = now.getHours() + now.getMinutes() / 60;
     const hoursAwake = schedule.hoursAwakeSince(currentHours, 0);
 
-    updatePrediction(userParameters, caffeineIntakes, schedule, hoursAwake, forecastDurationHours);
-  }, [sleepSessions, caffeineIntakes, userParameters, forecastDurationHours, updatePrediction]);
+    updatePrediction(userParameters, caffeineIntakes, schedule, hoursAwake, forecastDurationHours, {
+      enabled: drowsinessAlertsEnabled,
+      thresholdMs: DROWSINESS_THRESHOLD_MS[drowsinessThreshold],
+    });
+  }, [sleepSessions, caffeineIntakes, userParameters, forecastDurationHours, drowsinessAlertsEnabled, drowsinessThreshold, updatePrediction]);
 
   useEffect(() => {
     runPrediction();

@@ -1,7 +1,8 @@
-import { View, Text, ScrollView, Pressable, StyleSheet, Alert } from 'react-native';
+import { View, Text, ScrollView, Pressable, StyleSheet, Alert, Switch } from 'react-native';
 import { useAppStore } from '../../src/stores/app-store';
 import { useDataStore } from '../../src/stores/data-store';
 import { useThemeColors, spacing } from '../../src/theme';
+import type { DrowsinessThreshold } from '../../src/stores/app-store';
 
 function Stepper({
   value,
@@ -37,6 +38,12 @@ function Stepper({
   );
 }
 
+const THRESHOLD_OPTIONS: { value: DrowsinessThreshold; label: string; description: string }[] = [
+  { value: 'high', label: 'High', description: 'Alert at first sign of fatigue' },
+  { value: 'medium', label: 'Medium', description: 'Alert at moderate impairment' },
+  { value: 'low', label: 'Low', description: 'Alert only when severely impaired' },
+];
+
 export default function SettingsTab() {
   const theme = useThemeColors();
   const {
@@ -44,10 +51,14 @@ export default function SettingsTab() {
     caffeineCutoffHour,
     maxDailyCaffeineMg,
     forecastDurationHours,
+    drowsinessAlertsEnabled,
+    drowsinessThreshold,
     setCaffeineHalfLife,
     setCaffeineCutoffHour,
     setMaxDailyCaffeine,
     setForecastDuration,
+    setDrowsinessAlertsEnabled,
+    setDrowsinessThreshold,
   } = useAppStore();
   const { pvtResults, personalizationProgress, clearAllData } = useDataStore();
 
@@ -102,6 +113,51 @@ export default function SettingsTab() {
         />
       </View>
 
+      <Text style={[styles.section, { color: theme.textSecondary }]}>ALERTS</Text>
+      <View style={[styles.row, { borderColor: theme.border }]}>
+        <Text style={[styles.label, { color: theme.text }]}>Drowsiness Alerts</Text>
+        <Switch
+          value={drowsinessAlertsEnabled}
+          onValueChange={setDrowsinessAlertsEnabled}
+          trackColor={{ false: theme.border, true: theme.accent }}
+          thumbColor="#fff"
+        />
+      </View>
+      {drowsinessAlertsEnabled && (
+        <>
+          <View style={[styles.row, { borderColor: theme.border, flexDirection: 'column', alignItems: 'flex-start' }]}>
+            <Text style={[styles.label, { color: theme.text, marginBottom: spacing.sm }]}>Sensitivity</Text>
+            <View style={styles.thresholdRow}>
+              {THRESHOLD_OPTIONS.map((option) => (
+                <Pressable
+                  key={option.value}
+                  onPress={() => setDrowsinessThreshold(option.value)}
+                  style={[
+                    styles.thresholdBtn,
+                    {
+                      borderColor: drowsinessThreshold === option.value ? theme.accent : theme.border,
+                      backgroundColor: drowsinessThreshold === option.value ? theme.accent + '20' : 'transparent',
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.thresholdBtnText,
+                      { color: drowsinessThreshold === option.value ? theme.accent : theme.textSecondary },
+                    ]}
+                  >
+                    {option.label}
+                  </Text>
+                  <Text style={[styles.thresholdDesc, { color: theme.textSecondary }]}>
+                    {option.description}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
+        </>
+      )}
+
       <Text style={[styles.section, { color: theme.textSecondary }]}>FORECAST</Text>
       <View style={[styles.row, { borderColor: theme.border }]}>
         <Text style={[styles.label, { color: theme.text }]}>Duration</Text>
@@ -133,4 +189,8 @@ const styles = StyleSheet.create({
   stepValue: { fontSize: 15, fontWeight: '500', minWidth: 52, textAlign: 'center' },
   danger: { marginTop: spacing.xl, marginHorizontal: spacing.md, padding: spacing.md, borderRadius: 12, backgroundColor: '#fee2e2', alignItems: 'center' },
   dangerText: { color: '#ef4444', fontWeight: '600', fontSize: 16 },
+  thresholdRow: { flexDirection: 'row', gap: spacing.sm, width: '100%', paddingBottom: spacing.sm },
+  thresholdBtn: { flex: 1, borderWidth: 1.5, borderRadius: 8, padding: spacing.sm, alignItems: 'center' },
+  thresholdBtnText: { fontSize: 14, fontWeight: '600' },
+  thresholdDesc: { fontSize: 11, textAlign: 'center', marginTop: 2 },
 });

@@ -75,3 +75,30 @@ export async function sendPersonalizationComplete(): Promise<void> {
     trigger: null,
   });
 }
+
+export async function setupNotificationCategories(): Promise<void> {
+  await Notifications.setNotificationCategoryAsync('drowsiness_alert', [
+    {
+      identifier: 'dismiss',
+      buttonTitle: 'Dismiss',
+      options: { isDestructive: false, isAuthenticationRequired: false },
+    },
+    {
+      identifier: 'take_nap_break',
+      buttonTitle: 'Take Nap Break',
+      options: { isDestructive: false, isAuthenticationRequired: false, opensAppToForeground: true },
+    },
+  ]);
+}
+
+export async function sendDrowsinessAlert(): Promise<void> {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: 'Drowsiness Alert',
+      body: 'Your alertness is low. Consider taking a break or a short nap.',
+      sound: true,
+      categoryIdentifier: 'drowsiness_alert',
+    },
+    trigger: null,
+  });
+}
