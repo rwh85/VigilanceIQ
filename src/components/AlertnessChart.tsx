@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Dimensions, Animated } from 'react-native';
-import { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Dimensions, Animated, Pressable } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
 import { LineChart } from 'react-native-gifted-charts';
 import {
   AlertnessPrediction,
@@ -9,6 +9,16 @@ import {
 } from '../models/types';
 import { Constants } from '../models/constants';
 import { useThemeColors, spacing, radius, alertnessColors, typography } from '../theme';
+import { useAppStore } from '../stores/app-store';
+
+type ForecastView = 12 | 24 | 48;
+const FORECAST_OPTIONS: ForecastView[] = [12, 24, 48];
+
+function toForecastView(hours: number): ForecastView {
+  if (hours <= 12) return 12;
+  if (hours <= 24) return 24;
+  return 48;
+}
 
 interface AlertnessChartProps {
   prediction: AlertnessPrediction;
@@ -72,17 +82,29 @@ function buildChartSummary(
 export function AlertnessChart({ prediction, startHourOfDay }: AlertnessChartProps) {
   const theme = useThemeColors();
   const width = Dimensions.get('window').width - spacing.lg * 2;
+  const forecastDurationHours = useAppStore((s) => s.forecastDurationHours);
+  const setForecastDuration = useAppStore((s) => s.setForecastDuration);
+  const [viewHours, setViewHours] = useState<ForecastView>(() => toForecastView(forecastDurationHours));
+
+  useEffect(() => {
+    if (viewHours !== forecastDurationHours) {
+      setForecastDuration(viewHours);
+    }
+  }, [viewHours, forecastDurationHours, setForecastDuration]);
+
   const summary = buildChartSummary(prediction, startHourOfDay);
 
+  // 48h view uses 12h x-axis stride (every 24 points at 0.5h step); others use 2h stride (every 4 points)
+  const labelStride = viewHours === 48 ? 24 : 4;
   const data = prediction.times.map((t, i) => ({
     value: prediction.impairments[i],
-    label: i % 4 === 0 ? formatHour((startHourOfDay + t) % 24) : '',
+    label: i % labelStride === 0 ? formatHour((startHourOfDay + t) % 24) : '',
   }));
 
   const chartFill = theme.caffeineAccent + '33'; // 20% opacity
 
   const chartA11yLabel =
-    `Alertness Forecast chart. ` +
+    `Alertness Forecast chart, ${viewHours}-hour view. ` +
     `Current score: ${summary.currentScore} out of 10, ${summary.currentLevel}. ` +
     `Lowest point in next 6 hours: ${summary.worstScore} out of 10 at ${summary.worstTime}. ` +
     `${summary.caffeineWindowText}.`;
@@ -90,6 +112,31 @@ export function AlertnessChart({ prediction, startHourOfDay }: AlertnessChartPro
   return (
     <View style={[styles.container, { backgroundColor: theme.surface, borderColor: theme.border }]}>
       <Text style={[styles.title, { color: theme.text }]}>Alertness Forecast</Text>
+
+      {/* Forecast duration picker */}
+      <View style={styles.pickerRow} accessibilityRole="radiogroup" accessibilityLabel="Forecast duration">
+        {FORECAST_OPTIONS.map((opt) => {
+          const selected = viewHours === opt;
+          return (
+            <Pressable
+              key={opt}
+              style={[
+                styles.pickerBtn,
+                { borderColor: theme.border },
+                selected && { backgroundColor: theme.caffeineAccent, borderColor: theme.caffeineAccent },
+              ]}
+              onPress={() => setViewHours(opt)}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: selected }}
+              accessibilityLabel={`${opt}-hour forecast`}
+            >
+              <Text style={[styles.pickerBtnText, { color: selected ? '#fff' : theme.textSecondary }]}>
+                {opt}h
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
 
       {/* Chart wrapped as a single accessibility element so VoiceOver reads the label */}
       <View
@@ -212,6 +259,22 @@ const styles = StyleSheet.create({
     marginVertical: spacing.sm,
   },
   title: { ...typography.headingSmall, marginBottom: spacing.sm },
+  pickerRow: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+    marginBottom: spacing.sm,
+  },
+  pickerBtn: {
+    flex: 1,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  pickerBtnText: {
+    ...typography.bodySmall,
+    fontWeight: '500',
+  },
   skeletonTitle: {
     height: 20,
     width: 140,
