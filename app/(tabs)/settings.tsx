@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, Pressable, StyleSheet, Alert, Switch } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useAppStore } from '../../src/stores/app-store';
 import { useDataStore } from '../../src/stores/data-store';
 import { useThemeColors, spacing } from '../../src/theme';
@@ -46,6 +47,7 @@ const THRESHOLD_OPTIONS: { value: DrowsinessThreshold; label: string; descriptio
 
 export default function SettingsTab() {
   const theme = useThemeColors();
+  const router = useRouter();
   const {
     caffeineHalfLife,
     caffeineCutoffHour,
@@ -59,6 +61,7 @@ export default function SettingsTab() {
     setForecastDuration,
     setDrowsinessAlertsEnabled,
     setDrowsinessThreshold,
+    resetOnboarding,
   } = useAppStore();
   const { pvtResults, personalizationProgress, clearAllData } = useDataStore();
 
@@ -169,6 +172,18 @@ export default function SettingsTab() {
           accentColor={theme.accent}
         />
       </View>
+
+      <Text style={[styles.section, { color: theme.textSecondary }]}>DEMO</Text>
+      <Pressable
+        style={[styles.row, { borderColor: theme.border }]}
+        onPress={() => {
+          resetOnboarding();
+          router.replace('/onboarding' as never);
+        }}
+      >
+        <Text style={[styles.label, { color: theme.text }]}>Reset Onboarding</Text>
+        <Text style={[styles.value, { color: theme.textSecondary }]}>Replay intro flow</Text>
+      </Pressable>
 
       <Pressable style={styles.danger} onPress={handleClearData}>
         <Text style={styles.dangerText}>Clear All Data</Text>

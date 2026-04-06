@@ -33,6 +33,15 @@ export default function RootLayout() {
     init();
   }, []);
 
+  const hasSeenOnboarding = useAppStore((s) => s.hasSeenOnboarding);
+
+  useEffect(() => {
+    if (!ready) return;
+    if (!hasSeenOnboarding) {
+      router.replace('/onboarding' as never);
+    }
+  }, [ready, hasSeenOnboarding]);
+
   useEffect(() => {
     responseListenerRef.current = Notifications.addNotificationResponseReceivedListener(
       (response) => {

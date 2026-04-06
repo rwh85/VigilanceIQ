@@ -13,6 +13,9 @@ export const DROWSINESS_THRESHOLD_MS: Record<DrowsinessThreshold, number> = {
 
 interface AppState {
   hasSeenOnboarding: boolean;
+  driverName: string;
+  shiftStartHour: number;
+  dailyDrivingHours: number;
   forecastDurationHours: number;
   caffeineHalfLife: number;
   caffeineCutoffHour: number;
@@ -21,6 +24,8 @@ interface AppState {
   drowsinessThreshold: DrowsinessThreshold;
 
   setOnboardingComplete: () => void;
+  resetOnboarding: () => void;
+  setDriverProfile: (name: string, shiftStartHour: number, dailyDrivingHours: number) => void;
   setForecastDuration: (hours: number) => void;
   setCaffeineHalfLife: (hours: number) => void;
   setCaffeineCutoffHour: (hour: number) => void;
@@ -32,6 +37,9 @@ interface AppState {
 
 export const useAppStore = create<AppState>((set, get) => ({
   hasSeenOnboarding: false,
+  driverName: '',
+  shiftStartHour: 6,
+  dailyDrivingHours: 8,
   forecastDurationHours: 24,
   caffeineHalfLife: 5.7,
   caffeineCutoffHour: 16,
@@ -42,6 +50,18 @@ export const useAppStore = create<AppState>((set, get) => ({
   setOnboardingComplete: () => {
     set({ hasSeenOnboarding: true });
     AsyncStorage.setItem('hasSeenOnboarding', 'true');
+  },
+
+  resetOnboarding: () => {
+    set({ hasSeenOnboarding: false });
+    AsyncStorage.setItem('hasSeenOnboarding', 'false');
+  },
+
+  setDriverProfile: (name: string, shiftStartHour: number, dailyDrivingHours: number) => {
+    set({ driverName: name, shiftStartHour, dailyDrivingHours });
+    AsyncStorage.setItem('driverName', name);
+    AsyncStorage.setItem('shiftStartHour', String(shiftStartHour));
+    AsyncStorage.setItem('dailyDrivingHours', String(dailyDrivingHours));
   },
 
   setForecastDuration: (hours: number) => {
@@ -75,8 +95,14 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   loadPersistedState: async () => {
-    const [onboarding, forecast, halfLife, cutoff, maxDaily, alertsEnabled, alertThreshold] = await Promise.all([
+    const [
+      onboarding, driverName, shiftStartHour, dailyDrivingHours,
+      forecast, halfLife, cutoff, maxDaily, alertsEnabled, alertThreshold,
+    ] = await Promise.all([
       AsyncStorage.getItem('hasSeenOnboarding'),
+      AsyncStorage.getItem('driverName'),
+      AsyncStorage.getItem('shiftStartHour'),
+      AsyncStorage.getItem('dailyDrivingHours'),
       AsyncStorage.getItem('forecastDurationHours'),
       AsyncStorage.getItem('caffeineHalfLife'),
       AsyncStorage.getItem('caffeineCutoffHour'),
@@ -87,6 +113,9 @@ export const useAppStore = create<AppState>((set, get) => ({
 
     set({
       hasSeenOnboarding: onboarding === 'true',
+      driverName: driverName ?? '',
+      shiftStartHour: shiftStartHour ? Number(shiftStartHour) : 6,
+      dailyDrivingHours: dailyDrivingHours ? Number(dailyDrivingHours) : 8,
       forecastDurationHours: forecast ? Number(forecast) : 24,
       caffeineHalfLife: halfLife ? Number(halfLife) : 5.7,
       caffeineCutoffHour: cutoff ? Number(cutoff) : 16,
