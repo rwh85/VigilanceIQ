@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { useThemeColors, spacing } from '../theme';
-import { getPerformanceLevel, PERFORMANCE_COLORS, PERFORMANCE_LABELS } from '../models/types';
+import { getPerformanceLevel, reactionTimeToAlertness, PERFORMANCE_COLORS, PERFORMANCE_LABELS } from '../models/types';
 
 interface AlertnessCardProps {
   impairmentMs: number;
@@ -13,11 +13,20 @@ export function AlertnessCard({ impairmentMs, bacEquivalence, hoursAwake }: Aler
   const level = getPerformanceLevel(impairmentMs);
   const color = PERFORMANCE_COLORS[level];
   const label = PERFORMANCE_LABELS[level];
+  const alertnessScore = reactionTimeToAlertness(impairmentMs);
 
   return (
     <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
       <Text style={[styles.title, { color: theme.text }]}>Current Alertness</Text>
-      <Text style={[styles.rtValue, { color }]}>{Math.round(impairmentMs)} ms</Text>
+      <Text
+        style={[styles.scoreValue, { color }]}
+        accessibilityLabel={`Current alertness score: ${alertnessScore.toFixed(1)} out of 10`}
+      >
+        {alertnessScore.toFixed(1)}
+      </Text>
+      <Text style={[styles.msSecondary, { color: theme.textSecondary }]}>
+        ({Math.round(impairmentMs)} ms)
+      </Text>
       <Text style={[styles.label, { color }]}>{label}</Text>
       <View style={styles.row}>
         <View style={styles.stat}>
@@ -42,7 +51,8 @@ const styles = StyleSheet.create({
     marginVertical: spacing.sm,
   },
   title: { fontSize: 14, fontWeight: '600', marginBottom: spacing.sm },
-  rtValue: { fontSize: 48, fontWeight: '700' },
+  scoreValue: { fontSize: 48, fontWeight: '700' },
+  msSecondary: { fontSize: 14, marginBottom: spacing.xs },
   label: { fontSize: 16, marginBottom: spacing.md },
   row: { flexDirection: 'row', justifyContent: 'space-around' },
   stat: { alignItems: 'center' },

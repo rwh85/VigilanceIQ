@@ -65,6 +65,39 @@ export interface SleepSession {
 
 export type PerformanceLevel = 'excellent' | 'good' | 'fair' | 'poor' | 'veryPoor';
 
+/**
+ * Converts a reaction time (ms) to a continuous 1–10 alertness score.
+ * Matches the stepped breakpoints used across the app, interpolated for
+ * smooth one-decimal display.
+ */
+export function reactionTimeToAlertness(reactionTimeMs: number): number {
+  const controlPoints: [number, number][] = [
+    [300, 10.0],
+    [360, 9.0],
+    [380, 8.0],
+    [400, 7.0],
+    [430, 6.0],
+    [467, 5.0],
+    [500, 4.0],
+    [533, 3.0],
+    [600, 2.0],
+    [667, 1.0],
+  ];
+
+  if (reactionTimeMs <= 300) return 10.0;
+  if (reactionTimeMs >= 667) return 1.0;
+
+  for (let i = 0; i < controlPoints.length - 1; i++) {
+    const [ms0, score0] = controlPoints[i];
+    const [ms1, score1] = controlPoints[i + 1];
+    if (reactionTimeMs >= ms0 && reactionTimeMs < ms1) {
+      const t = (reactionTimeMs - ms0) / (ms1 - ms0);
+      return score0 + t * (score1 - score0);
+    }
+  }
+  return 1.0;
+}
+
 export function getPerformanceLevel(meanRT: number): PerformanceLevel {
   const t = Constants.AlertnessThresholds;
   if (meanRT < t.excellent) return 'excellent';
