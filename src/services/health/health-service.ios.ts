@@ -26,6 +26,12 @@ class HealthKitServiceImpl implements HealthService {
     });
   }
 
+  writeSleepSession(_session: SleepSession): Promise<void> {
+    // react-native-health does not expose a typed saveSleep API in this version.
+    // Sleep write-back to HealthKit is deferred to a native module upgrade.
+    return Promise.resolve();
+  }
+
   getSleepSessions(startDate: Date, endDate: Date): Promise<SleepSession[]> {
     return new Promise((resolve, reject) => {
       const options = {

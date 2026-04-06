@@ -2,6 +2,7 @@ import {
   initialize,
   requestPermission,
   readRecords,
+  insertRecords,
 } from 'react-native-health-connect';
 import { SleepSession } from '../../models/types';
 import { HealthService } from './health-service';
@@ -22,12 +23,28 @@ class HealthConnectServiceImpl implements HealthService {
 
       const granted = await requestPermission([
         { accessType: 'read', recordType: 'SleepSession' },
+        { accessType: 'write', recordType: 'SleepSession' },
       ]);
 
       return granted.length > 0;
     } catch {
       return false;
     }
+  }
+
+  async writeSleepSession(session: SleepSession): Promise<void> {
+    if (!this.initialized) {
+      await initialize();
+      this.initialized = true;
+    }
+    await insertRecords([
+      {
+        recordType: 'SleepSession',
+        startTime: session.startDate.toISOString(),
+        endTime: session.endDate.toISOString(),
+        stages: [],
+      },
+    ]);
   }
 
   async getSleepSessions(startDate: Date, endDate: Date): Promise<SleepSession[]> {
