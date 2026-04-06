@@ -19,6 +19,10 @@ class HealthKitServiceImpl implements HealthService {
   }
 
   requestPermissions(): Promise<boolean> {
+    if (typeof AppleHealthKit.initHealthKit !== 'function') {
+      // Native module unavailable (e.g. simulator without HealthKit entitlement)
+      return Promise.resolve(false);
+    }
     return new Promise((resolve) => {
       AppleHealthKit.initHealthKit(permissions, (err: string | null) => {
         resolve(!err);
@@ -33,6 +37,9 @@ class HealthKitServiceImpl implements HealthService {
   }
 
   getSleepSessions(startDate: Date, endDate: Date): Promise<SleepSession[]> {
+    if (typeof AppleHealthKit.getSleepSamples !== 'function') {
+      return Promise.resolve([]);
+    }
     return new Promise((resolve, reject) => {
       const options = {
         startDate: startDate.toISOString(),

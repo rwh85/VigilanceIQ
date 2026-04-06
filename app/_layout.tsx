@@ -27,7 +27,7 @@ export default function RootLayout() {
       await loadAllData();
       await healthService.requestPermissions();
       await setupNotificationCategories();
-      await requestNotificationPermissions();
+      requestNotificationPermissions().catch(() => {});
       setReady(true);
     }
     init();
