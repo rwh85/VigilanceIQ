@@ -1,14 +1,25 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useDataStore } from '../../src/stores/data-store';
 import { CaffeineQuickAdd } from '../../src/components/CaffeineQuickAdd';
 import { useThemeColors, spacing } from '../../src/theme';
 import { CaffeinePreset } from '../../src/models/types';
 
+function isToday(date: Date): boolean {
+  const today = new Date();
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+}
+
 export default function CaffeineTab() {
   const theme = useThemeColors();
   const router = useRouter();
   const { caffeineIntakes, caffeinePresets, addCaffeineIntake } = useDataStore();
+
+  const todaysIntakes = caffeineIntakes.filter((intake) => isToday(intake.timestamp));
 
   const handleQuickAdd = (preset: CaffeinePreset) => {
     const now = new Date();
@@ -26,9 +37,9 @@ export default function CaffeineTab() {
       <Text style={[styles.sectionTitle, { color: theme.text }]}>Quick Add</Text>
       <CaffeineQuickAdd presets={caffeinePresets} onAdd={handleQuickAdd} />
 
-      <Text style={[styles.sectionTitle, { color: theme.text }]}>Today's Intake</Text>
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>Today's Log</Text>
       <FlatList
-        data={caffeineIntakes.slice(0, 20)}
+        data={todaysIntakes}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={[styles.row, { borderColor: theme.border }]}>
@@ -40,6 +51,9 @@ export default function CaffeineTab() {
         )}
         ListEmptyComponent={<Text style={[styles.empty, { color: theme.textSecondary }]}>No caffeine logged today</Text>}
       />
+      <TouchableOpacity onPress={() => router.push('/caffeine-optimizer')}>
+        <Text style={[styles.viewHistory, { color: theme.textSecondary }]}>View history</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -51,4 +65,5 @@ const styles = StyleSheet.create({
   dose: { fontSize: 18, fontWeight: '600' },
   time: { fontSize: 14 },
   empty: { textAlign: 'center', marginTop: spacing.xl },
+  viewHistory: { textAlign: 'center', marginTop: spacing.sm, marginBottom: spacing.md, fontSize: 14 },
 });
