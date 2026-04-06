@@ -1,13 +1,16 @@
 import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAlertnessStore } from '../../src/stores/alertness-store';
 import { useDataStore } from '../../src/stores/data-store';
 import { useAlertnessPrediction } from '../../src/hooks/useAlertnessPrediction';
 import { AlertnessCard } from '../../src/components/AlertnessCard';
-import { AlertnessChart } from '../../src/components/AlertnessChart';
+import { AlertnessChart, AlertnessChartSkeleton } from '../../src/components/AlertnessChart';
 import { PersonalizationProgress } from '../../src/components/PersonalizationProgress';
 import { useThemeColors, spacing } from '../../src/theme';
+
+const SKELETON_MIN_MS = 300;
 
 export default function AlertnessTab() {
   const theme = useThemeColors();
@@ -16,13 +19,27 @@ export default function AlertnessTab() {
   const { currentImpairment, currentBAC, prediction, hoursAwake } = useAlertnessStore();
   const { pvtResults } = useDataStore();
 
+  const skeletonShownAt = useRef<number>(Date.now());
+  const [skeletonDone, setSkeletonDone] = useState(false);
+
+  useEffect(() => {
+    if (prediction && !skeletonDone) {
+      const elapsed = Date.now() - skeletonShownAt.current;
+      const remaining = Math.max(0, SKELETON_MIN_MS - elapsed);
+      const timer = setTimeout(() => setSkeletonDone(true), remaining);
+      return () => clearTimeout(timer);
+    }
+  }, [prediction, skeletonDone]);
+
   const now = new Date();
   const startHour = now.getHours() + now.getMinutes() / 60;
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
       <AlertnessCard impairmentMs={currentImpairment} bacEquivalence={currentBAC} hoursAwake={hoursAwake} />
-      {prediction && <AlertnessChart prediction={prediction} startHourOfDay={startHour} />}
+      {!skeletonDone || !prediction
+        ? <AlertnessChartSkeleton />
+        : <AlertnessChart prediction={prediction} startHourOfDay={startHour} />}
       <Pressable
         style={[styles.napAdvisorBtn, { backgroundColor: theme.surface, borderColor: theme.border }]}
         onPress={() => router.push('/nap' as never)}

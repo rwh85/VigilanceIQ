@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Animated } from 'react-native';
+import { useEffect, useRef } from 'react';
 import { LineChart } from 'react-native-gifted-charts';
 import { AlertnessPrediction } from '../models/types';
 import { Constants } from '../models/constants';
@@ -57,6 +58,31 @@ export function AlertnessChart({ prediction, startHourOfDay }: AlertnessChartPro
   );
 }
 
+export function AlertnessChartSkeleton() {
+  const theme = useThemeColors();
+  const shimmer = useRef(new Animated.Value(0.4)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(shimmer, { toValue: 1, duration: 800, useNativeDriver: true }),
+        Animated.timing(shimmer, { toValue: 0.4, duration: 800, useNativeDriver: true }),
+      ])
+    ).start();
+  }, [shimmer]);
+
+  return (
+    <View style={[styles.container, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+      <Animated.View
+        style={[styles.skeletonTitle, { backgroundColor: theme.border, opacity: shimmer }]}
+      />
+      <Animated.View
+        style={[styles.skeletonChart, { backgroundColor: theme.border, opacity: shimmer }]}
+      />
+    </View>
+  );
+}
+
 function formatHour(h: number): string {
   const hour = Math.floor(h) % 24;
   const ampm = hour >= 12 ? 'PM' : 'AM';
@@ -73,4 +99,14 @@ const styles = StyleSheet.create({
     marginVertical: spacing.sm,
   },
   title: { ...typography.headingSmall, marginBottom: spacing.sm },
+  skeletonTitle: {
+    height: 20,
+    width: 140,
+    borderRadius: radius.sm,
+    marginBottom: spacing.sm,
+  },
+  skeletonChart: {
+    height: 200,
+    borderRadius: radius.sm,
+  },
 });
